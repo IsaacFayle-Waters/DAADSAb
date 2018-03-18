@@ -1,4 +1,5 @@
 import csv
+import menuFunctions
 
 from random import*
 
@@ -20,7 +21,7 @@ def runRound(nameOfReadFile):
     with open(nameOfReadFile, "r") as readRound:
         roundReader = csv.reader(readRound, delimiter =',', quotechar='|')
         for match in roundReader:
-            #TODO Functionality: Add way to deal with erroneous scores.  
+            #TODO Functionality: Add way to deal with erroneous scores.
             #Display Results
             print('Player: ', match[0],' Sets won: ', match[1],' Player: ', match[2],' Sets won: ', match[3])
             #Determine winner, apend list of currentWinners
@@ -203,3 +204,44 @@ def setGlobalsFromFile():
 
 #Call function here, so as to avoid calling it everywhere else
 setGlobalsFromFile()
+
+######################################################
+##New functions in complience with coursework Part B##
+######################################################
+
+#New version of runRound that can now deal with error score, and player withdrwaral
+def runRoundNew(nameOfReadFile, gender):
+#Set gender specific score
+    if gender == 'f' or gender == '_WOMEN':
+        maximumScore = womenMaxScore
+        #print('fem')
+    elif gender == 'm' or gender == '_MEN':
+        maximumScore = menMaxScore
+        #print('mem')
+        #print(maximumScore)
+    #print(maximumScore)
+    #print(menMaxScore)
+    #print(womenMaxScore)
+    #print(gender)
+    with open(nameOfReadFile, "r") as readRound:
+     roundReader = csv.reader(readRound, delimiter =',', quotechar='|')
+     for match in roundReader:
+         #Deal with erroneous draw
+         if (match[1] == match[3]) == True:
+             #Manual Correction
+             #print('bop')
+             match[1], match[3] = menuFunctions.menuW(match[0], match[1], match[2], match[3], gender)
+        #Deal with any other error score
+         elif (int(match[1]) != maximumScore) and (int(match[3]) != maximumScore):
+             #Manual Correction
+             #print('bip')
+             match[1], match[3] = menuFunctions.menuW(match[0], match[1], match[2], match[3], gender)
+
+         #Display Results
+         print('Player: ', match[0],' Sets won: ', match[1],' Player: ', match[2],' Sets won: ', match[3])
+         #Determine winner, apend list of currentWinners
+         if match[1] > match[3]:
+             currentWinners.append(match[0])
+         else:
+             currentWinners.append(match[2])
+    print('\n')

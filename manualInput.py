@@ -82,33 +82,91 @@ def userInputStack(gender, roundNumber):
             except ValueError:
                 print('Please choose an excepted score. 0 to 2 for females. 0 to 3 for males')
                 continue
-
+        #Advance
+        count = count + 1
         #Check if last score entered was final score of match
-        if matchComplete == True:
+        #if matchComplete == True:
             #TODO Logic: Needs to now Question wether an inproper result is due to player withdraw.
             #Maybe do this at this stage, or write function to check scores afterwards. Check spec.
 
             #if player a score != minScore and playerB != min score. accept = False
-            if (roundReturn[count - 1][1][0] != minScore) and (roundReturn[count][1][0] != minScore):
-                accept = False
-            else:
-                accept = True
+            #if (roundReturn[count - 1][1][0] != minScore) and (roundReturn[count][1][0] != minScore):
+            #    accept = False
+            #else:
+            #    accept = True
 
             #if scores are equal or no one got a winning score, return player B to list of available players, remove player B and their score from round
-            if (roundReturn[count][1] == roundReturn[count - 1][1]) or (accept == False):
-                print('No draws possible. Also, to win, a player must have won 3 sets if male, 2 if female.')
-                #Return player to stack of available players
-                playerStack.insert( count ,choosePlayer)
-                #pop player and score from round.
-                roundReturn[count][1].pop()
-                roundReturn[count][0].pop()
-                continue
-            else:
+            #if (roundReturn[count][1] == roundReturn[count - 1][1]) or (accept == False):
+            #    print('No draws possible. Also, to win, a player must have won 3 sets if male, 2 if female.')
+            #    #Return player to stack of available players
+            #    playerStack.insert( count ,choosePlayer)
+            #    #pop player and score from round.
+            #    roundReturn[count][1].pop()
+            #    roundReturn[count][0].pop()
+            #    continue
+        #    else:
                 #Advance
-                count = count + 1
-        else:
+        #        count = count + 1
+        #else:
             #Advance
-            count = count + 1
+        #    count = count + 1
 
     #print('RR', roundReturn)
     return roundReturn
+
+#function Dealing with manual correction of erroneous non-withdrawral results
+def manualCorrection(playerA, playerAscore, playerB, playerBscore, gender):
+    #Set gender specifics
+    if gender == 'f' or gender == '_WOMEN':
+        possibleScore = list(range(tennisTools.womenMaxScore + 1))
+        maximumScore = tennisTools.womenMaxScore
+    elif gender == 'm' or gender == '_MEN':
+        possibleScore = list(range(tennisTools.menMaxScore + 1))
+        maximumScore = tennisTools.menMaxScore
+    #Correction Loop until satisfactory score found
+    done = False
+    while done == False:
+        #Input player A score
+        choosePlayerAscore = input('Please choose number of sets won by ' + playerA)
+        #Validate input. Second Elif probably not needed.
+        try:
+            if int(choosePlayerAscore) not in possibleScore:
+                print('Please choose an excepted score. 0 to 2 for females. 0 to 3 for males')
+                continue
+            elif int(choosePlayerAscore) > maximumScore:
+                print('Please choose an excepted score. 0 to 2 for females. 0 to 3 for males')
+                continue
+            else:
+                sendPlayerA = choosePlayerAscore
+                #print('A chosen')
+
+        except ValueError:
+                print('Please choose an excepted score. 0 to 2 for females. 0 to 3 for males')
+                continue
+        #Input player B score
+        choosePlayerBscore = input('Please choose number of sets won by ' + playerB)
+        #Validate input. Second Elif probably not needed.
+        try:
+            if int(choosePlayerBscore) not in possibleScore:
+                print('Please choose an excepted score. 0 to 2 for females. 0 to 3 for males')
+                continue
+            elif int(choosePlayerBscore) > maximumScore:
+                print('Please choose an excepted score. 0 to 2 for females. 0 to 3 for males')
+                continue
+            else:
+                sendPlayerB = choosePlayerBscore
+                #print('b chosen')
+
+        except ValueError:
+                print('Please choose an excepted score. 0 to 2 for females. 0 to 3 for males')
+                continue
+        #Ensure Acceptable winning score for one player. Is x = win and y < win, return, else retry.
+        if (int(sendPlayerA) == maximumScore) and (int(sendPlayerB) < maximumScore):
+            #print('A wins')
+            return sendPlayerA, sendPlayerB
+        elif (int(sendPlayerB) == maximumScore) and (int(sendPlayerA) < maximumScore):
+            #print('B wins')
+            return sendPlayerA, sendPlayerB
+        else:
+            print('No draws possible. Also, to win, a player must have won 3 sets if male, 2 if female.\nNo score higher than 3 for men, higher than 2 for women, or below zero are allowed\n')
+            continue

@@ -84,7 +84,8 @@ while True:
             tennisTools.setFixturesFromManual(nameOfFile,listSelect, selectGender)
 
         #Determine winners by reading file created in previous step. Display Results
-        tennisTools.runRound(nameOfFile)
+        print(gender + selectGender + '1')
+        tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Update Ranking points, both per round and overall
         ranking.updateRankPoints(tornement, str(playRound), selectGender)
@@ -112,7 +113,8 @@ while True:
         paramLocation = 'parameters\\'
         nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
         #Re-run round, but don't update anything as those points already added
-        tennisTools.runRound(nameOfFile)
+        print(gender + selectGender + '2')
+        tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Don't display option to view sorted list if re-running un-finished tornement
         cantSee = True
@@ -164,7 +166,8 @@ while True:
         tennisTools.currentWinners.clear()
 
         #Determine winners by reading file created in previous step. Display Results
-        tennisTools.runRound(nameOfFile)
+        print(gender + selectGender + '3')
+        tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Update Ranking points, both per round and overall
         ranking.updateRankPoints(tornement, str(playRound), selectGender)

@@ -3,6 +3,7 @@ import prizeMoney
 import ranking
 import resetOverallToZero
 import tennisTools
+import manualInput
 
 #Select tornement
 def tornementSelector():
@@ -50,7 +51,7 @@ def manualSelector():
 #Continue to next round
 def playNextRound(playRound):
     playChoice = input('Press any button to play next round.')
-        
+
     return playRound + 1
 
 #Select whether or not to exit
@@ -83,7 +84,7 @@ def checkPrizeMoney(gender):
         else:
             done = True
 
-#Select to view points from round or not            
+#Select to view points from round or not
 def checkPointsFromRound():
     checkList = ['y','n']
 
@@ -115,7 +116,7 @@ def checkOverallRankPoints():
         else:
             done = True
 
-#Select whether or not to return files to default 
+#Select whether or not to return files to default
 def dataWipe():
     wipeList = ['y', 'n']
 
@@ -131,8 +132,56 @@ def dataWipe():
             done = True
         else:
             done = True
-            
-    
-    
-            
 
+#Menu for erroneous results, and player withdrawral
+def menuW(playerA, playerAscore, playerB, playerBscore, gender):
+    #Possible awnsers to yes no
+    withdList = ['y', 'n']
+    #Display mistake
+    print('\nInvalid result: ' + playerA + ' Sets won:' + playerAscore + ' ' + playerB + ' Sets won:' + playerBscore  )
+    #Set gender specific withdraw results
+    #print(type(gender))
+    #print(type('f'))
+    if gender == 'f' or gender == '_WOMEN':
+        winnerScore = '2'
+        looserScore = '1'
+    elif gender == 'm' or gender == '_MEN':
+        winnerScore = '3'
+        looserScore = '2'
+
+    #Question loop. Possibly doesn't need boolean element, due to return statement
+    done = False
+    while done == False:
+        #Choose direction of re-entry. i.e withdrawral or error
+        checkStatus = input('\nHas a player withdrawn? y/n\n').lower()
+        #Validation
+        if checkStatus not in withdList:
+            print('Sorry, that is not a valid choice, please try again')
+            continue
+        #If player withdrawn: If not A then must be B
+        elif checkStatus == 'y':
+            confString = 'Was it ' + playerA + '? y/n'
+            confirm = input(confString).lower()
+            #Validation
+            if confirm not in withdList:
+                print('\nSorry, that is not a valid choice, please try again\n')
+                continue
+            #Set A as withdrawn player, return adjusted scores
+            elif confirm == 'y':
+                playerAscore = looserScore
+                playerBscore = winnerScore
+                print('Score adjusted')
+                return playerAscore, playerBscore
+                done = True
+            #Else B withdrew, so B gets lower score
+            else:
+                playerAscore = winnerScore
+                playerBscore = looserScore
+                print('Score adjusted')
+                return playerAscore, playerBscore
+                done = True
+
+        else:
+            print('No draws possible. Also, to win, a player must have won 3 sets if male, 2 if female.\nNo score higher than 3 for men, higher than 2 for women, or below zero are allowed\n')
+            return manualInput.manualCorrection(playerA, playerAscore, playerB, playerBscore, gender)
+            done = True
