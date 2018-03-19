@@ -3,7 +3,7 @@
 
 @If while reading from a file an erroneous score (a draw) has
 been encountered, the system should process the rest of the match scores in the file and ask the
-user to input the correct score manually.@ 
+user to input the correct score manually.@ [Done (I think)]
 
 @A player can withdraw at any point in the match (due
 to injury). In that case a win of 3 sets to 2 sets (men) or 2 sets to 1 (women) will be recorded to the
@@ -31,14 +31,14 @@ tournament.@[DONE (i think)]
 
 @Actual scores have to be processed for each match. The scores will determine the number of points
 won by a player.
-If a male player wins by 3 sets to 0 then the base points awarded for that round must be multiplied
+If a male player wins by 3 sets to 0 then the BASE POINTS AWARDED FOR THAT ROUND must be multiplied
 by a factor of 2.5
 If a male player wins by 3 sets to 1 then the based points awarded for that round must be multiplied
 by a factor of 1.5
 There is no bonus factor for a 3 sets to 2 win.
 In the ladies tournaments, a win by 2 sets to 0 will yield a bonus factor of 2.5 by which the base
 points awarded for that round must be multiplied.
-@
+@ [DONE - NEEDS FINE CHECKING]
 
 
 PERHAPS A LIST WITH CurrentWinners, PLUS A WIN MARGIN column (3-0 == 3, 3-1 = 2, 3-2 = 0). As ranking is done by round,
@@ -71,6 +71,15 @@ THEN UPDATED AT UPDATE STACK (NOTE: scoreMod might not need to be set in each el
                 tempScore = int(tempDataList[i][1])
                 tempDataList[i].insert(1, tempScore + (rankPoints * scoreMod))
                 tempDataList[i].pop(2)
+
+or
+
+if currentWinnersScoreMargin[j] == 1 
+	scoreMod = 0
+else
+	scoreMode = genderMod + currentWinnersScoreMargin[j] - 0.5
+
+
 
 
 
@@ -170,25 +179,39 @@ SEEDING PROBLEM PER SEASON:
 
 			 			
 
-
-19
-6
-1
-7
-20
-29
-32
-17
-30
-23
-31
-8
-25
-2
-4
-10
-
-
+For sanity: Unmodified base point output example: 
+1 : FP11 100.0
+2 : FP07 50.0
+3 : FP25 30.0
+4 : FP26 30.0
+5 : FP27 10.0
+6 : FP14 10.0
+7 : FP17 10.0
+8 : FP18 10.0
+9 : FP10 5.0
+10 : FP03 5.0
+11 : FP04 5.0
+12 : FP08 5.0
+13 : FP05 5.0
+14 : FP31 5.0
+15 : FP16 5.0
+16 : FP29 5.0
+17 : FP12 0.0
+18 : FP19 0.0
+19 : FP20 0.0
+20 : FP21 0.0
+21 : FP22 0.0
+22 : FP23 0.0
+23 : FP24 0.0
+24 : FP09 0.0
+25 : FP06 0.0
+26 : FP02 0.0
+27 : FP28 0.0
+28 : FP13 0.0
+29 : FP30 0.0
+30 : FP15 0.0
+31 : FP32 0.0
+32 : FP01 0.0
 
 
 

@@ -1,0 +1,7 @@
+1. World Files: To contain a set of seasons, of the same 'World'
+2. World State Check: Keep track of season progress. 
+	How many seasons have been played, if the most recent season is complete.
+3. Season State Check: If a tornement has already been played, do not allow it to be re-played.
+			Keep tempory files, and overall state files in order.
+4.Seeding information for each season.  
+ 

@@ -5,6 +5,23 @@ import resetOverallToZero
 import tennisTools
 import manualInput
 
+def createOrOpenWorld():
+    choicePath = ['N', 'E']
+
+    done = False
+    while done == False:
+        selectWorld = input('Create (N)ew game file, or select (E)xisting game file. Select (N/E).\n').upper()
+
+        if selectWorld not in choicePath:
+            print('Sorry, that is not a valid choice. Please choose N for New Game. E for Existing file.\n')
+            continue
+        else:
+            #print(selectWorld)
+            return selectWorld
+            done = True
+
+
+
 #Select tornement
 def tornementSelector():
     tornDict = {'A': tennisTools.tornementOne, 'B': tennisTools.tornementTwo, 'C': tennisTools.tornementThree, 'D': tennisTools.tornementFour}
