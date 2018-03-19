@@ -1,8 +1,15 @@
 import os
 import shutil
 
-#Select or create a file, and return it's path as string
+#global sendPath
+sendPath = ''
+
+#Select or create a file, and return it's path as string. Copies state files.
 def fileSelect(choice):
+    #Set Global, so path can be used around the program
+    global sendPath
+    sendPath
+
     #Name file. catch OS error.
     if choice == 'N':
         #done = False
@@ -16,8 +23,13 @@ def fileSelect(choice):
                 #And makes a copy of playerStates.
                 name = 'worlds\\' + worldName + '\\playerStates'
                 shutil.copytree('playerStates', name)
+                #States. Tornement state.
+                name = 'worlds\\' + worldName + '\\states'
+                shutil.copytree('states', name)
 
-                sendPath = 'worlds\\' + worldName
+                #String for global use.
+                #global sendPath
+                sendPath = 'worlds\\' + worldName + '\\'
                 return sendPath
                 #done = True
             except :#OSError:
@@ -36,8 +48,12 @@ def fileSelect(choice):
         while True:
             try:
                 useThis = input ('\nPlease choose Game File from above list by its number: 0,1,2...\n')
-                send = 'worlds\\' + listOfWorlds[int(useThis)]
-                return send
+                #global sendPath
+                sendPath = 'worlds\\' + listOfWorlds[int(useThis)] + '\\'
+                return sendPath
             except (ValueError, IndexError, OSError) as e:
                 print('\nIncorrect choice: Please choose a Game File from above list by its number: 0,1,2...\n')
                 continue
+
+    #global sendPath
+    #sendPath

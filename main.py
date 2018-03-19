@@ -5,7 +5,13 @@ import manualInput
 import sys
 import sortLists
 import menuFunctions
+import worldSpecific
 
+#Choose/create world file
+
+worldSpecific.fileSelect(menuFunctions.createOrOpenWorld())
+worldFile = worldSpecific.sendPath
+print(worldFile)
 #Set saved data files to default(Does not delete results files)
 menuFunctions.dataWipe()
 #########################
@@ -69,9 +75,9 @@ while True:
             pass
 
         #Name of Round File to be generated
-        paramLocation = 'parameters\\'
+        paramLocation = worldFile #'parameters\\'
         nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
-        #TODO Functionality: Possibly create new
+        print(nameOfFile)
 
         ######################################
         #START ROUND 1 (INITIALIZE TORNEMENT)#
@@ -109,7 +115,7 @@ while True:
         playRound = tennisTools.restartRound
 
         #Name of previous round
-        paramLocation = 'parameters\\'
+        paramLocation = worldFile#'parameters\\'
         nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
         #Re-run round, but don't update anything as those points already added
         #print(gender + selectGender + '2')
@@ -154,6 +160,7 @@ while True:
 
         #select file depending on round
         nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
+        print(nameOfFile)
 
         #Set fixtures, generate scores, write to file.
         if manualSelect == 'y':

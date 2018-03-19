@@ -2,19 +2,22 @@ import csv
 import tennisTools
 import ranking
 import sortLists
+import worldSpecific
 
+worldFile = worldSpecific.sendPath
 
 #Calculate winnings after every tornement
 def calculatePrizeMoney(tornement, roundNumber, gender):
+    worldFile = worldSpecific.sendPath
     currentWinnings = []
     tempDataList = []
     listOfWinners = tennisTools.currentWinners
 
     #Determine gender of players
     if gender == 'f':
-        tempPrizeFile = 'playerStates\TEMP_PRIZE_TOTAL_FEMALE.csv'
+        tempPrizeFile = worldFile + 'playerStates\TEMP_PRIZE_TOTAL_FEMALE.csv'
     elif gender == 'm':
-        tempPrizeFile = 'playerStates\TEMP_PRIZE_TOTAL_MALE.csv'
+        tempPrizeFile = worldFile +'playerStates\TEMP_PRIZE_TOTAL_MALE.csv'
 
     #Read file containing amounts of money ro be won to array
     with open('parameters\PRIZE_MONEY.csv', "r") as prizeFile:
@@ -103,16 +106,17 @@ def calculatePrizeMoney(tornement, roundNumber, gender):
 
 #Add valuse from round to file.
 def commitPrizeMoney(gender):
+    worldFile = worldSpecific.sendPath
     fromRound = []
     toFile = []
 
     #choose gender of file
     if gender == 'f':
-        tempPrizeFile = 'playerStates\TEMP_PRIZE_TOTAL_FEMALE.csv'
-        prizeFile = 'playerStates\PRIZE_TOTAL_FEMALE.csv'
+        tempPrizeFile = worldFile + 'playerStates\TEMP_PRIZE_TOTAL_FEMALE.csv'
+        prizeFile = worldFile + 'playerStates\PRIZE_TOTAL_FEMALE.csv'
     elif gender == 'm':
-        tempPrizeFile = 'playerStates\TEMP_PRIZE_TOTAL_MALE.csv'
-        prizeFile = 'playerStates\PRIZE_TOTAL_MALE.csv'
+        tempPrizeFile = worldFile + 'playerStates\TEMP_PRIZE_TOTAL_MALE.csv'
+        prizeFile = worldFile + 'playerStates\PRIZE_TOTAL_MALE.csv'
 
     #Read information from temporary per round file
     with open(tempPrizeFile, "r") as openTemp:
@@ -143,16 +147,17 @@ def commitPrizeMoney(gender):
 
 #Clear temp file for next tornement
 def clearTemporaryRoundFile(gender):
+    worldFile = worldSpecific.sendPath
     tempDataList = []
     zero = 0
 
     #Choose file gender
     if gender == 'f':
         playerFile = 'parameters\FEMALE_PLAYER_LIST.csv'
-        pointsFromFile = 'playerStates\TEMP_PRIZE_TOTAL_FEMALE.csv'
+        pointsFromFile = worldFile + 'playerStates\TEMP_PRIZE_TOTAL_FEMALE.csv'
     elif gender == 'm':
         playerFile = 'parameters\MALE_PLAYER_LIST.csv'
-        pointsFromFile = 'playerStates\TEMP_PRIZE_TOTAL_MALE.csv'
+        pointsFromFile = worldFile + 'playerStates\TEMP_PRIZE_TOTAL_MALE.csv'
 
      #Read in player list
     with open(playerFile, "r") as pointsFile:
@@ -167,14 +172,15 @@ def clearTemporaryRoundFile(gender):
 
 #Display winnings by sending list to sort function
 def displayWinnings(gender):
+    worldFile = worldSpecific.sendPath
 
     displayWinnings = []
 
      #choose gender of file
     if gender == 'f':
-        prizeFile = 'playerStates\PRIZE_TOTAL_FEMALE.csv'
+        prizeFile = worldFile + 'playerStates\PRIZE_TOTAL_FEMALE.csv'
     elif gender == 'm':
-        prizeFile = 'playerStates\PRIZE_TOTAL_MALE.csv'
+        prizeFile = worldFile + 'playerStates\PRIZE_TOTAL_MALE.csv'
 
     #Read information from overall prize file
     with open(prizeFile, "r") as openFinal:

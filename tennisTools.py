@@ -1,10 +1,14 @@
 import csv
 import menuFunctions
+import worldSpecific
 
 from random import*
 
 #defult seed for random
 seed()
+
+#global worldFile
+worldFile = worldSpecific.sendPath
 
 #stores tempory list of currentWinners to allocate rank points, and to form the fixtures for any subsiquent round.
 currentWinners = []
@@ -86,8 +90,10 @@ def checkIfPreviousComplete(tornement, gender):
     #Check if previous tornement complete = True
     #if True, continue as normal
     #Else if false use last round from round file to initiate next round
-
-    with open('states\PREVIOUS_ROUND_COMPLETE_CHECK.csv', "r") as checkThisFile:
+    worldFile = worldSpecific.sendPath
+    #print("worldFile: " + worldFile)
+    #print("worldSpecific.sendPath: " + worldSpecific.sendPath )
+    with open(worldFile + 'states\PREVIOUS_ROUND_COMPLETE_CHECK.csv', "r") as checkThisFile:
         tornementPrevious = list(csv.reader(checkThisFile, delimiter =',', quotechar='|'))
 
         #Determine tornement and gender
@@ -127,7 +133,7 @@ def checkIfPreviousComplete(tornement, gender):
 #Keep track of round, so if program ends before tornement has concluded, the program can start from stop point.
 #If tornement reaches end, reset check file
 def writePreviousComplete(tornement, gender, roundNumber):
-
+    worldFile = worldSpecific.sendPath
     #Strings for writing verification
     false = 'FALSE'
     true = 'TRUE'
@@ -156,10 +162,10 @@ def writePreviousComplete(tornement, gender, roundNumber):
             index = 7
 
     #Create list of check file
-    with open('states\PREVIOUS_ROUND_COMPLETE_CHECK.csv', "r") as ReadFile:
+    with open(worldFile + 'states\PREVIOUS_ROUND_COMPLETE_CHECK.csv', "r") as ReadFile:
         tornementPrevious = list(csv.reader(ReadFile, delimiter =',', quotechar='|'))
 
-    with open('states\PREVIOUS_ROUND_COMPLETE_CHECK.csv', "w", newline='') as checkFile:
+    with open(worldFile + 'states\PREVIOUS_ROUND_COMPLETE_CHECK.csv', "w", newline='') as checkFile:
         writeCheck = csv.writer(checkFile, delimiter =',', quotechar='|' )
         for tornements in range(len(tornementPrevious)):
             #Round 5. Reset

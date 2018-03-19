@@ -140,7 +140,7 @@ def dataWipe():
 
     done = False
     while done == False:
-        checkWipe = input('Would you like to delete all points data, and set files back to default(Does not delete results files)? y/n').lower()
+        checkWipe = input('Would you like to delete all points data from THIS Game File, and set files back to default(Does not delete results files)? y/n').lower()
         if checkWipe not in wipeList:
             print('Sorry, that is not a valid choice, please try again')
             continue

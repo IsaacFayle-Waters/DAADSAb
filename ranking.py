@@ -1,20 +1,15 @@
 import csv
 import tennisTools
 import sortLists
+import worldSpecific
 
 copyForSortOverallRank = []
 copyForSortRankForRound = []
 #copyForRankPointDifficulty = []
-
+worldFile = worldSpecific.sendPath
 #Update's total, season wide, points
 def updateRankPoints(tornementName, roundNumber, gender):
-
-    #Save overall points from last round.
-    #Run new round
-    #Read points from previous round to list
-    #If winner, subtract previous rounds points
-    #Add new points to list
-    #save new points to file.
+    worldFile = worldSpecific.sendPath
 
     currentWinners = tennisTools.currentWinners
     rankPoints = 0
@@ -43,9 +38,9 @@ def updateRankPoints(tornementName, roundNumber, gender):
         pointsReader = list(csv.reader(readPoints, delimiter =',', quotechar='|'))
 
     if gender == 'f':
-        overallPointsFile = 'playerStates\OVERALL_POINTS_WOMEN.csv'
+        overallPointsFile = worldFile + 'playerStates\OVERALL_POINTS_WOMEN.csv'
     elif gender == 'm':
-        overallPointsFile = 'playerStates\OVERALL_POINTS_MEN.csv'
+        overallPointsFile = worldFile + 'playerStates\OVERALL_POINTS_MEN.csv'
 
     #Points assigned to different rounds
     if roundNumber == '1':
@@ -118,8 +113,11 @@ def updateRankPoints(tornementName, roundNumber, gender):
 
 #Calculates points within a tornement, round to round. Saves information to a temporary location, in case of mid tornement closure.
 def updatePointsCurrentTornement(tornementName, roundNumber, gender):
+    #Shared variables/globals
+    worldFile = worldSpecific.sendPath
     currentWinners = tennisTools.currentWinners
     currentWinnersScoreMargin = tennisTools.currentWinnersScoreMargin
+
     rankPoints = 0
     #previousRoundPoints = 0
 
@@ -150,11 +148,11 @@ def updatePointsCurrentTornement(tornementName, roundNumber, gender):
     if gender == 'f':
         #print(gender)
         nameOfFillFile = 'parameters\FEMALE_PLAYER_LIST.csv'
-        tempTornementFile = 'playerStates\TEMP_TORNEMENT_FEMALE.csv'
+        tempTornementFile = worldFile + 'playerStates\TEMP_TORNEMENT_FEMALE.csv'
         genderMod = 1
     elif gender == 'm':
         nameOfFillFile = 'parameters\MALE_PLAYER_LIST.csv'
-        tempTornementFile = 'playerStates\TEMP_TORNEMENT_MALE.csv'
+        tempTornementFile = worldFile + 'playerStates\TEMP_TORNEMENT_MALE.csv'
         genderMod = 0
     #print(gender)
     #Populate player lists
@@ -245,15 +243,16 @@ def updatePointsCurrentTornement(tornementName, roundNumber, gender):
 
 #Clears temporary in tornement save file
 def clearTempFileForPastTornement(gender):
+    worldFile = worldSpecific.sendPath
     tempData = []
     zero = 0
 
     #Select gender of files
     if gender == 'f':
-        x = 'playerStates\TEMP_TORNEMENT_FEMALE.csv'
+        x = worldFile + 'playerStates\TEMP_TORNEMENT_FEMALE.csv'
         a = 'parameters\FEMALE_PLAYER_LIST.csv'
     elif gender == 'm':
-        x = 'playerStates\TEMP_TORNEMENT_MALE.csv'
+        x = worldFile + 'playerStates\TEMP_TORNEMENT_MALE.csv'
         a = 'parameters\MALE_PLAYER_LIST.csv'
 
     #Store player list
