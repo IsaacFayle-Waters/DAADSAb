@@ -95,6 +95,7 @@ def checkPointsFromRound():
             print('Sorry, that is not a valid choice, please try again')
             continue
         elif checkRound == 'y':
+            print('\nBase points are multiplied by win margin.\n')
             print(sortLists.enterSorting(ranking.copyForSortRankForRound), '\n')
             done = True
         else:

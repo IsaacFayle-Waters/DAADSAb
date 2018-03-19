@@ -8,6 +8,8 @@ seed()
 
 #stores tempory list of currentWinners to allocate rank points, and to form the fixtures for any subsiquent round.
 currentWinners = []
+currentWinnersScoreMargin = []
+copyForRankPointDifficulty = []
 
 #Populate player lists from file
 def fillPlayerList(nameOfReadFile, listToFill):
@@ -16,6 +18,7 @@ def fillPlayerList(nameOfReadFile, listToFill):
         for player in playerReader:
             listToFill.append(' '.join(player))
 
+#NEW VERSION LOWER IN THIS FILE CALLED runRoundNew.DEALS WITH ERROR IN RESULTS #
 #Sort round, print results, append currentWinners list for assigning rank points and winnings
 def runRound(nameOfReadFile):
     with open(nameOfReadFile, "r") as readRound:
@@ -31,7 +34,7 @@ def runRound(nameOfReadFile):
                 currentWinners.append(match[2])
     print('\n')
 
-#Set fixtures for next round
+#Set and simulate fixtures for next round
 def setFixtures(nameOfWriteFile, playerList, gender):
 
     #Help to randomize fixtures by shuffling list
@@ -242,6 +245,8 @@ def runRoundNew(nameOfReadFile, gender):
          #Determine winner, apend list of currentWinners
          if match[1] > match[3]:
              currentWinners.append(match[0])
+             currentWinnersScoreMargin.append(int(match[1]) - int(match[3]))
          else:
              currentWinners.append(match[2])
+             currentWinnersScoreMargin.append(int(match[3]) - int(match[1]))
     print('\n')

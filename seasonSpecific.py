@@ -2,6 +2,7 @@ import csv
 import tennisTools
 
 currentWinners = []
+#currentWinnersScoreMargin = []
 #maxScore = '3'
 
 #function Dealing with manual correction of erroneous non-withdrawral results
@@ -132,12 +133,12 @@ def runRoundTest(nameOfReadFile, gender):
          #Deal with erroneous scores.i.e draw
          if (match[1] == match[3]) == True:
              #Manual Correction
-             print('bop')
+             #print('bop')
              match[1], match[3] = menuW(match[0], match[1], match[2], match[3], gender)
 
          elif (int(match[1]) != maximumScore) and (int(match[3]) != maximumScore):
              #Manual Correction
-             print('bip')
+             #print('bip')
              match[1], match[3] = menuW(match[0], match[1], match[2], match[3], gender)
 
          #Display Results
@@ -145,8 +146,10 @@ def runRoundTest(nameOfReadFile, gender):
          #Determine winner, apend list of currentWinners
          if match[1] > match[3]:
              currentWinners.append(match[0])
+             currentWinnersScoreMargin.append(int(match[1]) - int(match[3]))
          else:
              currentWinners.append(match[2])
+             currentWinnersScoreMargin.append(int(match[3]) - int(match[1]))
     print('\n')
 
 #Simulate past season from file. Choose to update points files, or not. (?)
@@ -155,4 +158,7 @@ def runRoundTest(nameOfReadFile, gender):
 
 runRoundTest('data\worlds\providedFiles\SEASON_1\\test\TAC1_ROUND_1_MEN.csv', 'm')
 
-print(currentWinners)
+#print(currentWinners)
+#print(currentWinnersScoreMargin)
+#currentWinnersScoreMargin.clear()
+#print(currentWinnersScoreMargin)

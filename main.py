@@ -46,7 +46,7 @@ while True:
     if checkPrevious == 'TRUE':
         #Manual input option
         manualSelect = menuFunctions.manualSelector()
-
+        #Initialize round for start of tornement
         playRound = 0
         #Play next round
         playRound = menuFunctions.playNextRound(playRound)
@@ -84,13 +84,12 @@ while True:
             tennisTools.setFixturesFromManual(nameOfFile,listSelect, selectGender)
 
         #Determine winners by reading file created in previous step. Display Results
-        print(gender + selectGender + '1')
+        #print(gender + selectGender + '1')
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Update Ranking points, both per round and overall
-        ranking.updateRankPoints(tornement, str(playRound), selectGender)
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
-
+        ranking.updateRankPoints(tornement, str(playRound), selectGender)
         #Determine money owed to each player
         prizeMoney.calculatePrizeMoney(tornement, str(playRound), selectGender)
 
@@ -113,7 +112,7 @@ while True:
         paramLocation = 'parameters\\'
         nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
         #Re-run round, but don't update anything as those points already added
-        print(gender + selectGender + '2')
+        #print(gender + selectGender + '2')
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Don't display option to view sorted list if re-running un-finished tornement
@@ -164,14 +163,14 @@ while True:
 
         #Clear curent winners list, so a new list of winners can be made from this round
         tennisTools.currentWinners.clear()
+        tennisTools.currentWinnersScoreMargin.clear()
 
         #Determine winners by reading file created in previous step. Display Results
-        print(gender + selectGender + '3')
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Update Ranking points, both per round and overall
-        ranking.updateRankPoints(tornement, str(playRound), selectGender)
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
+        ranking.updateRankPoints(tornement, str(playRound), selectGender)
 
         #Determine money owed to each player
         prizeMoney.calculatePrizeMoney(tornement, str(playRound), selectGender)
@@ -191,6 +190,7 @@ while True:
 
     #empty current Winners list, so winner doesn't spill into next tornement
     tennisTools.currentWinners.clear()
+    tennisTools.currentWinnersScoreMargin.clear()
 
     #check players' earnings
     menuFunctions.checkPrizeMoney(selectGender)

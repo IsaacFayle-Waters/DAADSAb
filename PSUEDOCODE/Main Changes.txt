@@ -9,7 +9,7 @@ user to input the correct score manually.@
 to injury). In that case a win of 3 sets to 2 sets (men) or 2 sets to 1 (women) will be recorded to the
 credit of the non-withdrawing player. One way for handling this is that if an incomplete score is
 encountered the user will be asked to verify if the score is valid due to a player having withdrawn
-due to injury. If such is the case, the withdrawn player will be marked as a loser for this match.@
+due to injury. If such is the case, the withdrawn player will be marked as a loser for this match.@[Done (I think)]
 
 FOR THESE FIRST TWO POINTS, CHANGE runRound IN tennisTools.
 	EXAMPLE: "Has a player withdrawn(y/n)?"
@@ -27,7 +27,7 @@ FOR THESE FIRST TWO POINTS, CHANGE runRound IN tennisTools.
 
 
 @The system will have to allow a user to switch between results entry modes between rounds of a
-tournament.@
+tournament.@[DONE (i think)]
 
 @Actual scores have to be processed for each match. The scores will determine the number of points
 won by a player.
@@ -171,8 +171,22 @@ SEEDING PROBLEM PER SEASON:
 			 			
 
 
-
-parameters\MALE_PLAYER_LIST.csv
+19
+6
+1
+7
+20
+29
+32
+17
+30
+23
+31
+8
+25
+2
+4
+10
 
 
 
