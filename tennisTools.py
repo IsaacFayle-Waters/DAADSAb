@@ -14,6 +14,7 @@ worldFile = worldSpecific.sendPath
 currentWinners = []
 currentWinnersScoreMargin = []
 copyForRankPointDifficulty = []
+currentLosers = []
 
 #Populate player lists from file
 def fillPlayerList(nameOfReadFile, listToFill):
@@ -91,8 +92,7 @@ def checkIfPreviousComplete(tornement, gender):
     #if True, continue as normal
     #Else if false use last round from round file to initiate next round
     worldFile = worldSpecific.sendPath
-    #print("worldFile: " + worldFile)
-    #print("worldSpecific.sendPath: " + worldSpecific.sendPath )
+
     with open(worldFile + 'states\PREVIOUS_ROUND_COMPLETE_CHECK.csv', "r") as checkThisFile:
         tornementPrevious = list(csv.reader(checkThisFile, delimiter =',', quotechar='|'))
 
@@ -252,7 +252,9 @@ def runRoundNew(nameOfReadFile, gender):
          if match[1] > match[3]:
              currentWinners.append(match[0])
              currentWinnersScoreMargin.append(int(match[1]) - int(match[3]))
+             currentLosers.append(match[2])
          else:
              currentWinners.append(match[2])
              currentWinnersScoreMargin.append(int(match[3]) - int(match[1]))
+             currentLosers.append(match[0])
     print('\n')

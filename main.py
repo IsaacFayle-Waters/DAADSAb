@@ -6,6 +6,7 @@ import sys
 import sortLists
 import menuFunctions
 import worldSpecific
+import statistics
 
 #Choose/create world file
 
@@ -94,6 +95,7 @@ while True:
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Update Ranking points, both per round and overall
+        statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
         ranking.updateRankPoints(tornement, str(playRound), selectGender)
         #Determine money owed to each player
@@ -171,11 +173,13 @@ while True:
         #Clear curent winners list, so a new list of winners can be made from this round
         tennisTools.currentWinners.clear()
         tennisTools.currentWinnersScoreMargin.clear()
+        tennisTools.currentLosers.clear()
 
         #Determine winners by reading file created in previous step. Display Results
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
         #Update Ranking points, both per round and overall
+        statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
         ranking.updateRankPoints(tornement, str(playRound), selectGender)
 
@@ -198,6 +202,7 @@ while True:
     #empty current Winners list, so winner doesn't spill into next tornement
     tennisTools.currentWinners.clear()
     tennisTools.currentWinnersScoreMargin.clear()
+    tennisTools.currentLosers.clear()
 
     #check players' earnings
     menuFunctions.checkPrizeMoney(selectGender)
@@ -205,6 +210,8 @@ while True:
     menuFunctions.checkPointsFromRound()
     #check overall leader bourd
     menuFunctions.checkOverallRankPoints()
+
+    #statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
 
 
     #Exit System?
