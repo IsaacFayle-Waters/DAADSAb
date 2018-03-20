@@ -186,7 +186,7 @@ def updatePointsCurrentTornement(tornementName, roundNumber, gender):
                     #print('rank * mod ' , float(rankPoints) * scoreMod)
                     #print('Margin' , currentWinnersScoreMargin[j])
 
-                    tempScore = int(tempDataList[i][1])
+                    tempScore = float(tempDataList[i][1])
                     tempDataList[i].insert(1, tempScore + (float(rankPoints) * scoreMod))
                     tempDataList[i].insert(2, scoreMod)
                     tempDataList[i].pop(3)

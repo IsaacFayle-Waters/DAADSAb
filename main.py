@@ -6,6 +6,7 @@ import sys
 import sortLists
 import menuFunctions
 import worldSpecific
+import seasonSpecific
 import statistics
 
 #Choose/create world file
@@ -22,6 +23,8 @@ while True:
     #TODO Menu option: Ask if user wants to start new first season, or continue
     #With next season in series, (?)
     #TODO Functionality: check and update seedList
+    seasonSpecific.checkAndInit()
+    seasonNumber = 'SEASON_' + str(seasonSpecific.seasonNumber) + '_'
 
     #Populate list of Male Players
     listOfMalePlayers = []
@@ -38,13 +41,10 @@ while True:
     selectGender= menuFunctions.genderSelector()
 
     #Tornement select
-    tornement = menuFunctions.tornementSelector()
+    tornement = menuFunctions.tornementSelector(selectGender)
 
     #Simple string to complete nameOfFile
     fileType = '.csv'
-
-    #Gender select
-    #selectGender= menuFunctions.genderSelector()
 
     #Check if previous tornement of this type ended properly
     checkPrevious = tennisTools.checkIfPreviousComplete(tornement, selectGender)
@@ -77,7 +77,7 @@ while True:
 
         #Name of Round File to be generated
         paramLocation = worldFile #'parameters\\'
-        nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
+        nameOfFile = paramLocation + seasonNumber + tornement + str(playRound) + gender + fileType
         print(nameOfFile)
 
         ######################################
@@ -94,7 +94,7 @@ while True:
         #print(gender + selectGender + '1')
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
-        #Update Ranking points, both per round and overall
+        #Update Ranking points, both per round and overall. Add statistics.
         statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
         ranking.updateRankPoints(tornement, str(playRound), selectGender)
@@ -118,7 +118,7 @@ while True:
 
         #Name of previous round
         paramLocation = worldFile#'parameters\\'
-        nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
+        nameOfFile = paramLocation + seasonNumber + tornement + str(playRound) + gender + fileType
         #Re-run round, but don't update anything as those points already added
         #print(gender + selectGender + '2')
         tennisTools.runRoundNew(nameOfFile,selectGender)
@@ -141,12 +141,15 @@ while True:
             menuFunctions.checkPointsFromRound()
             #check overall leader bourd
             menuFunctions.checkOverallRankPoints()
+            #stats
+            menuFunctions.viewPlayerStatsTornement()
         else:
             pass
 
         #Enable sorted lists
         cantSee = False
 
+        #Select manual option
         manualSelect = menuFunctions.manualSelector()
 
         #Confirm play next round and add players to list for next round
@@ -161,7 +164,7 @@ while True:
         print('Round: ', playRound)
 
         #select file depending on round
-        nameOfFile = paramLocation + tornement + str(playRound) + gender + fileType
+        nameOfFile = paramLocation + seasonNumber + tornement + str(playRound) + gender + fileType
         print(nameOfFile)
 
         #Set fixtures, generate scores, write to file.
@@ -178,7 +181,7 @@ while True:
         #Determine winners by reading file created in previous step. Display Results
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
-        #Update Ranking points, both per round and overall
+        #Update Ranking points, both per round and overall, Add statistics.
         statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
         ranking.updateRankPoints(tornement, str(playRound), selectGender)
@@ -189,6 +192,7 @@ while True:
         #Record tornement as complete, or not.
         tennisTools.writePreviousComplete(tornement, selectGender, str(playRound))
 
+    seasonSpecific.setTornementPlayed(tornement,selectGender,str(playRound))
 
     #Clear temporary points file, as tornement finished
     ranking.clearTempFileForPastTornement(selectGender)
@@ -210,9 +214,8 @@ while True:
     menuFunctions.checkPointsFromRound()
     #check overall leader bourd
     menuFunctions.checkOverallRankPoints()
-
-    #statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
-
+    #stats
+    menuFunctions.viewPlayerStatsTornement()
 
     #Exit System?
     #exitSystem = input('Exit Program: Y/N').upper()

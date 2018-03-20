@@ -9,44 +9,38 @@ def fileSelect(choice):
     #Set Global, so path can be used around the program
     global sendPath
     sendPath
-
-    #Name file. catch OS error.
+    #If user chooses to create a new game file, input filename, create folder, default state folders..
     if choice == 'N':
         #done = False
         while True:
             try:
                 #Name of game file
                 worldName = input('Please name your New game: ')
-                #os.makedirs('worlds\\' + worldName)
-
                 #String of path. shutil.copytree creates a new directory with the chosen name,
-                #And makes a copy of playerStates.
+                #And makes a copy of playerStates/states.
                 name = 'worlds\\' + worldName + '\\playerStates'
                 shutil.copytree('playerStates', name)
                 #States. Tornement state.
                 name = 'worlds\\' + worldName + '\\states'
                 shutil.copytree('states', name)
-
-                #String for global use.
-                #global sendPath
+                #Filename for global use.
                 sendPath = 'worlds\\' + worldName + '\\'
                 return sendPath
-                #done = True
-            except :#OSError:
+            #Catch OSError
+            except :
                 print('Please choose an appropriate File Name. Must not contain: \/:*?"<>| \n ')
-    #List existing files and choose which to run
+    #Else if user chooses Existing file, list existing files and choose which to run
     elif choice == 'E':
-        #print(os.listdir("worlds"))
+        #Make list of filenames
         listOfWorlds = os.listdir("worlds")
-        #List files by integer
+        #List files by integer from zero up.
         i = - 1
         for world in listOfWorlds:
             i = i + 1
             print(i,': ', world)
-        #index error, ValueError
-
+        #Choose file, catch out of bounds choce, or non integer choice
         while True:
-            try:
+            try:#If correct selection made, return and set global file name (Return statement needed?)
                 useThis = input ('\nPlease choose Game File from above list by its number: 0,1,2...\n')
                 #global sendPath
                 sendPath = 'worlds\\' + listOfWorlds[int(useThis)] + '\\'
@@ -54,6 +48,3 @@ def fileSelect(choice):
             except (ValueError, IndexError, OSError) as e:
                 print('\nIncorrect choice: Please choose a Game File from above list by its number: 0,1,2...\n')
                 continue
-
-    #global sendPath
-    #sendPath

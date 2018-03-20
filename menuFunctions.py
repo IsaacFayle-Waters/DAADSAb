@@ -4,10 +4,13 @@ import ranking
 import resetOverallToZero
 import tennisTools
 import manualInput
+import statistics
+import seasonSpecific
 
+#Initial options for start menu. Other options included in worldSpecific.fileSelect
 def createOrOpenWorld():
     choicePath = ['N', 'E']
-
+    #Choose new game file or existing game file
     done = False
     while done == False:
         selectWorld = input('Create (N)ew game file, or select (E)xisting game file. Select (N/E).\n').upper()
@@ -16,16 +19,14 @@ def createOrOpenWorld():
             print('Sorry, that is not a valid choice. Please choose N for New Game. E for Existing file.\n')
             continue
         else:
-            #print(selectWorld)
             return selectWorld
             done = True
 
-
-
 #Select tornement
-def tornementSelector():
+def tornementSelector(gender):
     tornDict = {'A': tennisTools.tornementOne, 'B': tennisTools.tornementTwo, 'C': tennisTools.tornementThree, 'D': tennisTools.tornementFour}
     print(tornDict)
+
 
     done = False
     while done == False:
@@ -34,8 +35,13 @@ def tornementSelector():
             print('Sorry, that is not a valid choice, please try again')
             continue
         else:
-            return tornDict[tornChoice]
-            done = True
+            limiter = seasonSpecific.limitTornementOptions(gender,tornDict[tornChoice])
+            if limiter == 1:
+                print('\nSorry, that tornement has already been played for that gender.\n')
+                continue
+            elif limiter == 0:
+                return tornDict[tornChoice]
+                done = True
 
 #Select gender of players
 def genderSelector():
@@ -57,7 +63,7 @@ def manualSelector():
 
     done = False
     while done == False:
-        manChoice = input('Would you like to input your results manually? y/n').lower()
+        manChoice = input('Would you like to input your results manually for this round? y/n').lower()
         if manChoice not in manList:
             print('Sorry, that is not a valid choice, please try again')
             continue
@@ -71,7 +77,7 @@ def playNextRound(playRound):
 
     return playRound + 1
 
-#Select whether or not to exit
+#Select whether or not to exi(s)t
 def exitSelector():
     exitList = ['Y', 'N']
 
@@ -202,4 +208,20 @@ def menuW(playerA, playerAscore, playerB, playerBscore, gender):
         else:
             print('No draws possible. Also, to win, a player must have won 3 sets if male, 2 if female.\nNo score higher than 3 for men, higher than 2 for women, or below zero are allowed\n')
             return manualInput.manualCorrection(playerA, playerAscore, playerB, playerBscore, gender)
+            done = True
+
+def viewPlayerStatsTornement():
+    statsChoiceList = ['y','n']
+
+    done = False
+    while done == False:
+        checkStats = input('\nWould you like to view Player Statistics for the Current tornement? (y/n) \n').lower()
+
+        if checkStats not in statsChoiceList:
+            print('\nSorry, that is not a valid choice, please try again\n')
+            continue
+        elif checkStats == 'y':
+            statistics.viewStatsCurrentTornement()
+            done = True
+        else:
             done = True
