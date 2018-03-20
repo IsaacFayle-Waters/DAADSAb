@@ -24,6 +24,7 @@ while True:
     #With next season in series, (?)
     #TODO Functionality: check and update seedList
     seasonSpecific.checkAndInit()
+    print('Why? ', seasonSpecific.seasonNumber)
     seasonNumber = 'SEASON_' + str(seasonSpecific.seasonNumber) + '_'
 
     #Populate list of Male Players
