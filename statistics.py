@@ -10,6 +10,7 @@ def playerStatistics(gender):
     statsList = []
     currentWinners = tennisTools.currentWinners
     currentLosers = tennisTools.currentLosers
+    currentWinnersScoreMargin = tennisTools.currentWinnersScoreMargin
 
     #Select list depending on gender
     if gender == 'f':
@@ -25,22 +26,48 @@ def playerStatistics(gender):
     #print(statsList[1])
     #print(statsList[5])
     one = 1
-    #Total wins, TotalLosses
+    #Total wins, TotalLosses, Win Margin-1, win margin-2
     for i in range(len(statsList)):
         for j in range(len(currentWinners)):
+            #if currentWinnersScoreMargin[j] == one:
+            #    oneMargin = int(statsList[i][2])
+            #    statsList[i].insert(3, oneMargin + one)
+            #    statsList[i].pop(4)
             if currentWinners[j] == statsList[i][0]:
                 totalWins = int(statsList[i][1])
+                oneMargin = int(statsList[i][3])
+                twoMargin = int(statsList[i][4])
                 statsList[i].insert(1, totalWins + one)
                 statsList[i].pop(2)
+
+                if currentWinnersScoreMargin[j] == one:
+                    #oneMargin = int(statsList[i][2])
+                    statsList[i].insert(3, oneMargin + one)
+                    statsList[i].pop(4)
+                elif currentWinnersScoreMargin[j] == (one + one):
+                    statsList[i].insert(4, twoMargin + one)
+                    statsList[i].pop(5)
+
             elif currentLosers[j] == statsList[i][0]:
                 totalLosses = int(statsList[i][2])
                 statsList[i].insert(2, totalLosses + one)
                 statsList[i].pop(3)
 
+
     print('From Stats: \n')
-    #print(statsList)
-    for player in statsList:
-        print(player)
+    #temp until menu function created.
+    #zero = 0
+    print('Name ','Wins ','Losses ','1-set ', '2-set', '3-set', '%-Won')
+    for count in range(len(statsList)):
+        #print(player[0])
+        threeSet = int(statsList[count][1]) - (int(statsList[count][3]) + int(statsList[count][4]))
+        #(win / (win + lose)) * 100
+        if statsList[count][1] == 0:
+            percentage = 0
+        else:
+            percentage = (float(statsList[count][1]) / (float(statsList[count][1]) + float(statsList[count][2]))) * 100
+        #percentage =
+        print(statsList[count][0],'   ',statsList[count][1],'   ',statsList[count][2],'   ',statsList[count][3],'   ',statsList[count][4],'   ',threeSet,'   ', percentage)
 
 
     with open(statsFile, "w", newline='') as writeStatsBack:
