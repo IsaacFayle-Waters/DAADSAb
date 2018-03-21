@@ -154,14 +154,7 @@ def updatePointsCurrentTornement(tornementName, roundNumber, gender):
         nameOfFillFile = 'parameters\MALE_PLAYER_LIST.csv'
         tempTornementFile = worldFile + 'playerStates\TEMP_TORNEMENT_MALE.csv'
         genderMod = 0
-    #print(gender)
-    #Populate player lists
-    #tennisTools.fillPlayerList(nameOfFillFile, playerList)
 
-    #save temp list of winners TODO: This may be redundant; evaluate
-    #tempPlayerListWinners = [tempPlayerList for tempPlayerList in playerList if tempPlayerList in currentWinners]
-    #print(currentWinners)
-    #print(currentWinnersScoreMargin)
     with open(tempTornementFile, "r") as pointsFile:
         thesePlayers = csv.reader(pointsFile, delimiter=',', quotechar='|')
         for players in thesePlayers:
@@ -175,59 +168,26 @@ def updatePointsCurrentTornement(tornementName, roundNumber, gender):
                 scoreMod = 1
             else:
                 scoreMod = genderMod + currentWinnersScoreMargin[j] - 0.5
-                #scoreMod = 1
-                #print(scoreMod)
             #Round 1
             if roundNumber == '1':
                 if currentWinners[j] == tempDataList[i][0]:
-                    #print('player ' + currentWinners[j])
-                    #print('rankpoint ', rankPoints)
-                    #print('Scoremod ' , scoreMod)
-                    #print('rank * mod ' , float(rankPoints) * scoreMod)
-                    #print('Margin' , currentWinnersScoreMargin[j])
-
                     tempScore = float(tempDataList[i][1])
                     tempDataList[i].insert(1, tempScore + (float(rankPoints) * scoreMod))
                     tempDataList[i].insert(2, scoreMod)
                     tempDataList[i].pop(3)
-                    #print(tempDataList[i])
             #Round 5
             elif roundNumber == '5':
                 if currentWinners[j] == tempDataList[i][0]:
-                    #print(tempPlayerListWinners[j])
-                    #print(rankPoints)
-                    #print(scoreMod)
-                    #print(float(rankPoints) * scoreMod)
-                    #print('Margin' , currentWinnersScoreMargin[j])
-
                     tempScore = float(tempDataList[i][1])
                     tempDataList[i].insert(1, (float(rankPoints) * scoreMod))
                     tempDataList[i].insert(2, scoreMod)
-                    #tempDataList[i].pop(2)
             #Round 2-4
             else:
                 if currentWinners[j] == tempDataList[i][0]:#CHANGED FROM ORIGINAL: tempPlayerListWinners[j] == tempDataList[i][0]
-                    #Possible unforseen results?
-                    #print(tempPlayerListWinners[j])
-                    #print(rankPoints)
-                    #print(scoreMod)
-                    #print(float(rankPoints) * scoreMod)
-                    #print('Margin' , currentWinnersScoreMargin[j])
-                    #print('Tempdatlist[i][1]/tempScore ',tempDataList[i][0])
                     tempScore = float(tempDataList[i][1])
-                    #print(tempScore)
-                    #print(tempScore - (previousRoundPoints / float(tempDataList[i][2])))
-
                     tempDataList[i].insert(1, float(rankPoints) * scoreMod)
                     tempDataList[i].insert(2, scoreMod)
-                    #tempDataList[i].insert(3, tempScore - prevScore)
-                    #tempDataList[i].insert(3, currentWinnersScoreMargin[j])
-                    #tempDataList[i].pop(3)
-                    #tempDataList[i].pop(5)
-                    #print(tempDataList[i])
 
-    #print(currentWinners)
-    #print(currentWinnersScoreMargin)
     #Save points back into file
     with open(tempTornementFile, "w", newline='') as pointsFile:
         writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
@@ -236,8 +196,6 @@ def updatePointsCurrentTornement(tornementName, roundNumber, gender):
 
     global copyForSortRankForRound
     copyForSortRankForRound = tempDataList
-
-    #global copyForRankPointDifficulty
     tennisTools.copyForRankPointDifficulty = tempDataList
 
 

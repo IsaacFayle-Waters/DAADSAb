@@ -223,15 +223,10 @@ def runRoundNew(nameOfReadFile, gender):
 #Set gender specific score
     if gender == 'f' or gender == '_WOMEN':
         maximumScore = womenMaxScore
-        #print('fem')
+
     elif gender == 'm' or gender == '_MEN':
         maximumScore = menMaxScore
-        #print('mem')
-        #print(maximumScore)
-    #print(maximumScore)
-    #print(menMaxScore)
-    #print(womenMaxScore)
-    #print(gender)
+
     with open(nameOfReadFile, "r") as readRound:
      roundReader = csv.reader(readRound, delimiter =',', quotechar='|')
      for match in roundReader:

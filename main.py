@@ -9,8 +9,9 @@ import worldSpecific
 import seasonSpecific
 import statistics
 
-#Choose/create world file
+#seasonSpecific.setSeeds('f', None, None)
 
+#Choose/create world file
 worldSpecific.fileSelect(menuFunctions.createOrOpenWorld())
 worldFile = worldSpecific.sendPath
 print(worldFile)
@@ -24,7 +25,6 @@ while True:
     #With next season in series, (?)
     #TODO Functionality: check and update seedList
     seasonSpecific.checkAndInit()
-    print('Why? ', seasonSpecific.seasonNumber)
     seasonNumber = 'SEASON_' + str(seasonSpecific.seasonNumber) + '_'
 
     #Populate list of Male Players
@@ -94,6 +94,9 @@ while True:
         #Determine winners by reading file created in previous step. Display Results
         #print(gender + selectGender + '1')
         tennisTools.runRoundNew(nameOfFile,selectGender)
+        
+        seasonSpecific.isSeed(tornement,selectGender,playRound)
+        #seasonSpecific.setSeeds(selectGender,tornement)#CHANGED: #Needs uncommenting, when structure inplace to keep in step with seasons
 
         #Update Ranking points, both per round and overall. Add statistics.
         statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
@@ -182,6 +185,9 @@ while True:
         #Determine winners by reading file created in previous step. Display Results
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
+        seasonSpecific.isSeed(tornement,selectGender,playRound)
+        #seasonSpecific.setSeeds(selectGender,tornement)#CHANGED:
+
         #Update Ranking points, both per round and overall, Add statistics.
         statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
@@ -193,7 +199,10 @@ while True:
         #Record tornement as complete, or not.
         tennisTools.writePreviousComplete(tornement, selectGender, str(playRound))
 
-    seasonSpecific.setTornementPlayed(tornement,selectGender,str(playRound))
+    #View overall stats for overall season
+    #menuFunctions.viewPlayerStatsSeason()
+    #Really Tracks Whether or not a tornemnet has been played, and tracks which season Currently being played
+    #seasonSpecific.setTornementPlayed(tornement,selectGender,str(playRound))
 
     #Clear temporary points file, as tornement finished
     ranking.clearTempFileForPastTornement(selectGender)
@@ -204,7 +213,7 @@ while True:
     #Clear temporary prize money file, as tornement finished
     prizeMoney.clearTemporaryRoundFile(selectGender)
 
-    #empty current Winners list, so winner doesn't spill into next tornement
+    #Empty current lists, avoid spill into next tornement
     tennisTools.currentWinners.clear()
     tennisTools.currentWinnersScoreMargin.clear()
     tennisTools.currentLosers.clear()
@@ -217,6 +226,14 @@ while True:
     menuFunctions.checkOverallRankPoints()
     #stats
     menuFunctions.viewPlayerStatsTornement()
+
+    #UpdateOverall stats, clear temp
+    statistics.updateSeasonStatsClearTemp(selectGender)
+
+    #View overall stats for overall season
+    menuFunctions.viewPlayerStatsSeason()
+    #Really Tracks Whether or not a tornemnet has been played, and tracks which season Currently being played
+    seasonSpecific.setTornementPlayed(tornement,selectGender,str(playRound))
 
     #Exit System?
     #exitSystem = input('Exit Program: Y/N').upper()

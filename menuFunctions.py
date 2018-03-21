@@ -225,3 +225,20 @@ def viewPlayerStatsTornement():
             done = True
         else:
             done = True
+
+#TODO list season wide stats
+def viewPlayerStatsSeason():
+    statsChoiceList = ['y','n']
+
+    done = False
+    while done == False:
+        checkStats = input('\nWould you like to view Player Statistics for the Overall season? (y/n) \n').lower()
+
+        if checkStats not in statsChoiceList:
+            print('\nSorry, that is not a valid choice, please try again\n')
+            continue
+        elif checkStats == 'y':
+            statistics.viewStatsCurrentSeason()
+            done = True
+        else:
+            done = True
