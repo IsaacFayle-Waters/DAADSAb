@@ -1,0 +1,40 @@
+1. World Files: To contain a set of seasons, of the same 'World'
+2. World State Check: Keep track of season progress. 
+	How many seasons have been played, if the most recent season is complete.
+3. Season State Check: If a tornement has already been played, do not allow it to be re-played.
+			Keep tempory files, and overall state files in order.
+4.Seeding information for each season. 
+
+
+ 
+Season state: (Male example)
+	Update player information:
+		Total Number of wins:
+			Wins Total
+			Wins 3-0
+			Wins 3-1
+			Wins 3-2 ( Wins Total - (Wins 3-0  +  Wins 3-1 ) ?) 
+		Total Losses:
+			Losses Total
+		Pecentage Wins:
+			WinPercent = (Wins Total / (Wins Total + Losses Total)) * 100
+	
+	Check season run:
+		Example: Data provided for part B. Simply results, no data. Needs data. 
+
+
+Interface:
+The old implementation imediatly asks you if you'd like to delete all tempory data.
+Is this still needed? As each world will have it's own temp data, possibly not. 
+
+First question from menu: Create (N)ew game file, or select (E)xisting game file. Select (N/E).
+ 	IF select = New:
+		nameOfNewWorld = input(Please name your game)
+	
+	Else:
+		Please select a game file from the following list.
+		
+		
+
+worlds\Zaks Game\states
+\/:*?"<>|

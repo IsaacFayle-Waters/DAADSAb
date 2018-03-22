@@ -1,6 +1,7 @@
 import csv
 import menuFunctions
 import worldSpecific
+import seasonSpecific
 
 from random import*
 
@@ -15,6 +16,7 @@ currentWinners = []
 currentWinnersScoreMargin = []
 copyForRankPointDifficulty = []
 currentLosers = []
+seedsTemp = []
 
 #Populate player lists from file
 def fillPlayerList(nameOfReadFile, listToFill):
@@ -23,50 +25,113 @@ def fillPlayerList(nameOfReadFile, listToFill):
         for player in playerReader:
             listToFill.append(' '.join(player))
 
-#NEW VERSION LOWER IN THIS FILE CALLED runRoundNew.DEALS WITH ERROR IN RESULTS #
-#Sort round, print results, append currentWinners list for assigning rank points and winnings
-def runRound(nameOfReadFile):
-    with open(nameOfReadFile, "r") as readRound:
-        roundReader = csv.reader(readRound, delimiter =',', quotechar='|')
-        for match in roundReader:
-            #TODO Functionality: Add way to deal with erroneous scores.
-            #Display Results
-            print('Player: ', match[0],' Sets won: ', match[1],' Player: ', match[2],' Sets won: ', match[3])
-            #Determine winner, apend list of currentWinners
-            if match[1] > match[3]:
-                currentWinners.append(match[0])
-            else:
-                currentWinners.append(match[2])
-    print('\n')
-
 #Set and simulate fixtures for next round
-def setFixtures(nameOfWriteFile, playerList, gender):
-
+def setFixtures(nameOfWriteFile, playerList, gender, round):
+    seeds = []
+    nonSeed = []
     #Help to randomize fixtures by shuffling list
-    shuffle(playerList)
+    #shuffle(playerList)
+
+    #CHANGED to reflect seeding. Bit hacky.
+    season = int(seasonSpecific.seasonNumber)
+    #If in second or subsequent rounds, split list into seeded and non-seeded
+    if season > 1:
+            if round == 1:
+                seeds = seasonSpecific.currentSeeded
+                for i in range(len(playerList)):
+                    #If player not a seed, add to list of non seeded players
+                    if playerList[i] not in seeds:
+                        nonSeed.append(playerList[i])
+            elif round == 5:
+                    pass
+            else:
+                half = int(len(currentWinners) / 2)
+                for players in range(half):
+                    seeds.append(currentWinners[players])
+
+                for i in range(len(currentWinners)):
+                    if currentWinners[i] not in seeds:
+                        nonSeed.append(currentWinners[i])
+
+            #Increase Randomness
+            shuffle(seeds)
+            shuffle(nonSeed)
+            #Display Players in their seeded and non seeded state
+            print('Seeds')
+            print(seeds)
+            print('Non-seeds')
+            print(nonSeed)
+
+    #Proceed normanly
+    else:
+        shuffle(playerList)
+
+    if gender == 'f':
+        maxScore = womenMaxScore
+    elif gender == 'm':
+        maxScore = menMaxScore
 
     #Find half List size, (halves number of matches per round)
     halfLength = int(len(playerList) / 2)
-
+    #Process matches and write to file
     with open(nameOfWriteFile, "w", newline='') as writeRound:
         matchWriter = csv.writer(writeRound, delimiter =',', quotechar='|' )
 
-        #Write remaining fixtures, psudo randomize scores, and alternate winners
-        if gender == 'f':
+        #If more than one season has been played, seeding comes into play
+        if season > 1:
             for i in range(halfLength):
-                a = randrange(0,womenMaxScore)
-                if i % 2 == 0:
-                     matchWriter.writerow([playerList[i]] + [a] + [playerList[i + halfLength]] + [womenMaxScore])
+                #Set random score in non-erroneous range. (Could include erroneous, as would be caught by newRunRound, but would waste time)
+                score = randrange(0,maxScore)
+                winScore = maxScore
+                if round == 5:
+                    playerX = currentWinners[0]
+                    playerY = currentWinners[1]
                 else:
-                    matchWriter.writerow([playerList[i]] + [womenMaxScore] + [playerList[i + halfLength]] + [a])
+                    #If seeds list or nonSeed list not empty
+                    if seeds:
+                        playerX = seeds[0]
+                        seeds.pop(0)
+                        playerY = seeds[0]
+                        seeds.pop(0)
+                    #If seeds list empty
+                    elif not seeds:
+                        #Players from non-seed only
+                        playerX = nonSeed[0]
+                        nonSeed.pop(0)
+                        playerY = nonSeed[0]
+                        nonSeed.pop(0)
 
-        elif gender == 'm':
-            for i in range(halfLength):
-                a = randrange(0,menMaxScore)
+                #Attempt to remove any pattern in scoring
+                moreRandom = randrange(1,3)
+                if moreRandom == 1:
+                    winner = playerX
+                    loser = playerY
+                elif moreRandom == 2:
+                    winner = playerY
+                    loser = playerX
+                #Write to file
                 if i % 2 == 0:
-                     matchWriter.writerow([playerList[i]] + [a] + [playerList[i + halfLength]] + [menMaxScore])
+                    matchWriter.writerow([loser] + [score] + [winner] + [winScore])
                 else:
-                    matchWriter.writerow([playerList[i]] + [menMaxScore] + [playerList[i + halfLength]] + [a])
+                    matchWriter.writerow([winner] + [winScore] + [loser] + [score])
+
+        else:
+        #Write remaining fixtures, psudo randomize scores, and alternate winners
+            if gender == 'f':
+                for i in range(halfLength):
+                    a = randrange(0,womenMaxScore)
+                    if i % 2 == 0:
+                         matchWriter.writerow([playerList[i]] + [a] + [playerList[i + halfLength]] + [womenMaxScore])
+                    else:
+                        matchWriter.writerow([playerList[i]] + [womenMaxScore] + [playerList[i + halfLength]] + [a])
+
+            elif gender == 'm':
+                for i in range(halfLength):
+                    a = randrange(0,menMaxScore)
+                    if i % 2 == 0:
+                         matchWriter.writerow([playerList[i]] + [a] + [playerList[i + halfLength]] + [menMaxScore])
+                    else:
+                        matchWriter.writerow([playerList[i]] + [menMaxScore] + [playerList[i + halfLength]] + [a])
 
 
 def setFixturesFromManual(nameOfWriteFile, playerList, gender):

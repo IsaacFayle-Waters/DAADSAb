@@ -85,23 +85,28 @@ while True:
         #START ROUND 1 (INITIALIZE TORNEMENT)#
         ######################################
 
+        #Determine seeds
+        seasonSpecific.isSeed(tornement,selectGender,playRound)
+
         #Set fixtures, generate scores, write to file.
         if manualSelect == 'n':
-            tennisTools.setFixtures(nameOfFile,listSelect, selectGender)
+            tennisTools.setFixtures(nameOfFile,listSelect, selectGender, int(playRound))
         else:
             tennisTools.setFixturesFromManual(nameOfFile,listSelect, selectGender)
 
+        #seasonSpecific.currentSeeded.clear()
         #Determine winners by reading file created in previous step. Display Results
         #print(gender + selectGender + '1')
         tennisTools.runRoundNew(nameOfFile,selectGender)
-        
-        seasonSpecific.isSeed(tornement,selectGender,playRound)
-        #seasonSpecific.setSeeds(selectGender,tornement)#CHANGED: #Needs uncommenting, when structure inplace to keep in step with seasons
+
+
+        seasonSpecific.setSeeds(selectGender,tornement)#CHANGED: #Needs uncommenting, when structure inplace to keep in step with seasons
 
         #Update Ranking points, both per round and overall. Add statistics.
         statistics.playerStatistics(selectGender)#CHANGED:New bit for stats
         ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)
         ranking.updateRankPoints(tornement, str(playRound), selectGender)
+
         #Determine money owed to each player
         prizeMoney.calculatePrizeMoney(tornement, str(playRound), selectGender)
 
@@ -110,7 +115,8 @@ while True:
 
         #Enable sorted lists
         cantSee = False
-
+        #print('From fixtures')
+        #print(seasonSpecific.currentSeeded)
     #IF PREVIOUS ROUND OF THIS TORNEMENT TYPE DID NOT FINISH, RE-RUN ROUND PRIOR TO SHUTDOWN
     elif checkPrevious == 'FALSE':
         if selectGender == 'f':
@@ -153,6 +159,7 @@ while True:
         #Enable sorted lists
         cantSee = False
 
+
         #Select manual option
         manualSelect = menuFunctions.manualSelector()
 
@@ -162,8 +169,16 @@ while True:
             listSelect = manualInput.userInputStack(selectGender, str(playRound))
         else:
             playRound = menuFunctions.playNextRound(playRound)
+            #if int(seasonSpecific.seasonNumber) == 1:
             listSelect = tennisTools.currentWinners
+            #elif int(seasonSpecific.seasonNumber) > 1:
+             #   if selectGender == 'f':
+              #      listSelect = listOfFemalePlayers
+               # elif selectGender == 'm':
+                #    listSelect = listOfMalePlayers
 
+        #Determine seeds
+        seasonSpecific.isSeed(tornement,selectGender,playRound)
         #Display round number
         print('Round: ', playRound)
 
@@ -175,7 +190,9 @@ while True:
         if manualSelect == 'y':
             tennisTools.setFixturesFromManual(nameOfFile,listSelect, selectGender)
         else:
-            tennisTools.setFixtures(nameOfFile,listSelect, selectGender)
+            tennisTools.setFixtures(nameOfFile,listSelect, selectGender, int(playRound))
+
+        #seasonSpecific.currentSeeded.clear()
 
         #Clear curent winners list, so a new list of winners can be made from this round
         tennisTools.currentWinners.clear()
@@ -185,8 +202,8 @@ while True:
         #Determine winners by reading file created in previous step. Display Results
         tennisTools.runRoundNew(nameOfFile,selectGender)
 
-        seasonSpecific.isSeed(tornement,selectGender,playRound)
-        #seasonSpecific.setSeeds(selectGender,tornement)#CHANGED:
+        #seasonSpecific.isSeed(tornement,selectGender,playRound)
+        seasonSpecific.setSeeds(selectGender,tornement)#CHANGED:
 
         #Update Ranking points, both per round and overall, Add statistics.
         statistics.playerStatistics(selectGender)#CHANGED:New bit for stats

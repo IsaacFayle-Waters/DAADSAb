@@ -10,7 +10,7 @@ import statistics
 #Globals
 seasonNumber = None
 worldFile = worldSpecific.sendPath
-currentSeeds = []
+currentSeeded = []
 
 #Check season number
 def checkAndInit():
@@ -78,6 +78,8 @@ def setTornementPlayed(tornement,gender,roundNumber):
                 checkList[0].pop(2)
                 #As season over, clear season stats list
                 statistics.statsListPerSeason.clear()
+                copyOriginalAndResetOriginal()
+                ranking.resetOverAllAtEndOfSeason()
                 #As season over, set all tornemnet locks back to zero
                 for i in range(len(checkList)):
                 #print('seasonNumber = ', seasonNumber)
@@ -134,6 +136,7 @@ def limitTornementOptions(gender, tornement):
     else:
         return 0
 
+#Collect seeds
 def setSeeds(gender, tornement):
     worldFile = worldSpecific.sendPath
     currentWinners = tennisTools.currentWinners
@@ -152,6 +155,7 @@ def setSeeds(gender, tornement):
         #if current winner in seed file increment round number of tornement by one
 
     #IF SEASON > One
+        #NOTE surley overall rank points should be wiped after every season?
         #COPY SEEDLIST FOR USE IN SEEDING
         #WIPE ORIGINAL AND RE-FILL SEED LIST WITH CURRENT POSITION INFO#TODO
 
@@ -159,9 +163,15 @@ def setSeeds(gender, tornement):
     #NAME, TORN1 (0,0,0,0),TORN2 (0,0,0,0),TORN3 (0,0,0,0),TORN4 (0,0,0,0),
     #Actualy only needs name, torn1, torn2, torn3, torn4,
     if gender == 'f':
-        seedFile = worldFile + 'playerStates\FEMALE_PLAYER_SEED.csv'
+        if int(seasonNumber) == 1:
+            seedFile = worldFile + 'playerStates\TEMP_FEMALE_PLAYER_SEED.csv'
+        else:
+            seedFile = worldFile + 'playerStates\FEMALE_PLAYER_SEED.csv'
     elif gender == 'm':
-        seedFile = worldFile + 'playerStates\MALE_PLAYER_SEED.csv'
+        if int(seasonNumber) == 1:
+            seedFile = worldFile + 'playerStates\TEMP_MALE_PLAYER_SEED.csv'
+        else:
+            seedFile = worldFile + 'playerStates\MALE_PLAYER_SEED.csv'
 
     with open(seedFile, "r") as seedyFile:
         thesePlayers = csv.reader(seedyFile, delimiter=',', quotechar='|')
@@ -199,48 +209,38 @@ def setSeeds(gender, tornement):
         for players in range(len(seedList)):
             writePoints.writerow(seedList[players])
 
+#Selects Seeds depending on tornement type, and which round currently playing
 def isSeed(tornement,gender,roundNumber):
     worldFile = worldSpecific.sendPath
     tornementOne = tennisTools.tornementOne
     tornementTwo = tennisTools.tornementTwo
     tornementThree = tennisTools.tornementThree
     tornementFour = tennisTools.tornementFour
+    currentWinners = tennisTools.currentWinners
+
+    #Ensure round variable is integer
+    round = int(roundNumber)
 
     seedList = []
     currentSeeds = []
-
+    seedTemp = []
+    #Gender specifics
     if gender == 'f':
-        seedFile = worldFile + 'playerStates\FEMALE_PLAYER_SEED.csv'
-        #fillFile = 'parameters\FEMALE_PLAYER_LIST.csv'
-    elif gender == 'm':
-        seedFile = worldFile + 'playerStates\MALE_PLAYER_SEED.csv'
-        #fillFile = 'parameters\MALE_PLAYER_LIST.csv'
+        seedFile = worldFile + 'playerStates\TEMP_FEMALE_PLAYER_SEED.csv'
 
+    elif gender == 'm':
+        seedFile = worldFile + 'playerStates\TEMP_MALE_PLAYER_SEED.csv'
+
+    #if round == 1:
+        #Read in seedFile
     with open(seedFile, "r") as seedyFile:
         thesePlayers = csv.reader(seedyFile, delimiter=',', quotechar='|')
         for players in thesePlayers:
             seedList.append(players)
+    #else:
+        #seedList = tennisTools.seedsTemp
 
-    #with open(fillFile, "r") as fillyFile:
-    #    thesePlayers = csv.reader(fillyFile, delimiter=',', quotechar='|')
-    #    for players in thesePlayers:
-    #        seedList.append(players)
-
-    #In current tornement
-        #if round == 1
-            #if position in seedList < 1
-                #Player=currentSeed
-                #currentSeed.append(player)
-        #elif round == 2
-            #if position in seedList < 2
-                #Player=currentSeed
-        #elif round == 3
-            #if position in seedList < 3
-                #Player=currentSeed
-        #elif round == 4
-            #if position in seedList < 4
-                #Player=currentSeed
-
+    #Select position in seed file corresponding with current tornement
     if tornement == tornementOne:
         index = 1
     elif tornement == tornementTwo:
@@ -250,17 +250,93 @@ def isSeed(tornement,gender,roundNumber):
     elif tornement == tornementFour:
         index = 4
 
-    round = int(roundNumber)
+    #If past tornement position greater than round about to be played,
+    #Select player as seed.
+    #print('CurrentWinner', currentWinners)
+    print(seedList[0][0])
 
-    for i in range(len(seedList)):
-        if int(seedList[i][index]) > round:
-            thisPlayer = seedList[i][0]
-            currentSeeds.append(thisPlayer)
+    if round == 1:
+        for i in range(len(seedList)):
+            if int(seedList[i][index]) > round:
+                thisPlayer = seedList[i][0]
+                currentSeeds.append(thisPlayer)
+                #tennisTools.seedsTemp.append(thisPlayer)
 
-    print(currentSeeds)
+
+    #print('Please work', currentSeeds)
+    global currentSeeded
+    currentSeeded = currentSeeds
 
 
+def copyOriginalAndResetOriginal():
+    worldFile = worldSpecific.sendPath
+    #originalSeedList = []
+    copySeedListFem = []
+    copySeedListMen = []
 
+
+    seedFileFem = worldFile + 'playerStates\FEMALE_PLAYER_SEED.csv'
+    previousSeasonSeedingFem = worldFile + 'playerStates\TEMP_FEMALE_PLAYER_SEED.csv'
+
+
+    seedFileMen = worldFile + 'playerStates\MALE_PLAYER_SEED.csv'
+    previousSeasonSeedingMen = worldFile + 'playerStates\TEMP_MALE_PLAYER_SEED.csv'
+
+    #Make original seed matrix to list
+    with open(seedFileFem, "r") as seedyFemFile:
+        thesePlayers = csv.reader(seedyFemFile, delimiter=',', quotechar='|')
+        for players in thesePlayers:
+            copySeedListFem.append(players)
+
+    with open(seedFileMen, "r") as seedyMenFile:
+        thesePlayers = csv.reader(seedyMenFile, delimiter=',', quotechar='|')
+        for players in thesePlayers:
+            copySeedListMen.append(players)
+
+    #print('Original',copySeedList)
+    #Write original to temp (For use in next season)
+    with open(previousSeasonSeedingFem, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(copySeedListFem)):
+            writePoints.writerow(copySeedListFem[players])
+
+    with open(previousSeasonSeedingMen, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(copySeedListMen)):
+            writePoints.writerow(copySeedListMen[players])
+
+    one = 1
+    for i in range(len(copySeedListFem)):
+        copySeedListFem[i].insert(1,one)
+        copySeedListFem[i].pop(2)
+        copySeedListFem[i].insert(2,one)
+        copySeedListFem[i].pop(3)
+        copySeedListFem[i].insert(3,one)
+        copySeedListFem[i].pop(4)
+        copySeedListFem[i].insert(4,one)
+        copySeedListFem[i].pop(5)
+
+    for i in range(len(copySeedListMen)):
+        copySeedListMen[i].insert(1,one)
+        copySeedListMen[i].pop(2)
+        copySeedListMen[i].insert(2,one)
+        copySeedListMen[i].pop(3)
+        copySeedListMen[i].insert(3,one)
+        copySeedListMen[i].pop(4)
+        copySeedListMen[i].insert(4,one)
+        copySeedListMen[i].pop(5)
+
+        #print('Wiped',copySeedList)
+    #Reset orignal to defualt, for fresh season
+    with open(seedFileFem, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(copySeedListFem)):
+            writePoints.writerow(copySeedListFem[players])
+
+    with open(seedFileMen, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(copySeedListMen)):
+            writePoints.writerow(copySeedListMen[players])
 
 
 
@@ -268,6 +344,10 @@ def isSeed(tornement,gender,roundNumber):
 
 #TODO# DO THIS IF HAVE TIME
 #def seasonFromFile():
+    #Set Fixtures from file
+
+
+
     #tennisTools.runRoundNew(nameOfFile,selectGender)
     #statistics.playerStatistics(selectGender)
     #ranking.updatePointsCurrentTornement(tornement, str(playRound), selectGender)

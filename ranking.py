@@ -225,3 +225,55 @@ def clearTempFileForPastTornement(gender):
         writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
         for players in range(len(tempData)):
             writePoints.writerow(tempData[players] + [zero])
+
+#Reset overall season points at the end of each season. Only seeding to be brought over
+def resetOverAllAtEndOfSeason():
+    worldFile = worldSpecific.sendPath
+    MplainListOfPlayers = []
+    FplainListOfPlayers = []
+    zero = 0
+
+
+    FoverallPoints = worldFile + 'playerStates\OVERALL_POINTS_WOMEN.csv'
+    FprizeMoney =  worldFile + 'playerStates\PRIZE_TOTAL_FEMALE.csv'
+    FplayersFile = 'parameters\FEMALE_PLAYER_LIST.csv'
+
+    MoverallPoints = worldFile + 'playerStates\OVERALL_POINTS_MEN.csv'
+    MprizeMoney =  worldFile + 'playerStates\PRIZE_TOTAL_MALE.csv'
+    MplayersFile = 'parameters\MALE_PLAYER_LIST.csv'
+
+    #Copy in plain list of players
+    with open(FplayersFile, "r") as FseedyFile:
+        thesePlayers = csv.reader(FseedyFile, delimiter=',', quotechar='|')
+        for players in thesePlayers:
+            FplainListOfPlayers.append(players)
+
+    with open(MplayersFile, "r") as MseedyFile:
+        thesePlayers = csv.reader(MseedyFile, delimiter=',', quotechar='|')
+        for players in thesePlayers:
+            MplainListOfPlayers.append(players)
+
+
+    #OverWrite overall pointsFile
+    with open(FoverallPoints, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(FplainListOfPlayers)):
+            writePoints.writerow(FplainListOfPlayers[players] + [zero])
+
+    #OverWrite overall pointsFile
+    with open(MoverallPoints, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(MplainListOfPlayers)):
+            writePoints.writerow(MplainListOfPlayers[players] + [zero])
+
+    #OverWrite overall prizemoney
+    with open(FprizeMoney, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(FplainListOfPlayers)):
+            writePoints.writerow(FplainListOfPlayers[players] + [zero])
+
+    #OverWrite overall prizemoney
+    with open(MprizeMoney, "w", newline='') as pointsFile:
+        writePoints = csv.writer(pointsFile, delimiter =',', quotechar='|' )
+        for players in range(len(MplainListOfPlayers)):
+            writePoints.writerow(MplainListOfPlayers[players] + [zero])
